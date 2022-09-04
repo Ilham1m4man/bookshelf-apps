@@ -18,17 +18,17 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function addBook() {
-  const bookTitle = document.getElementById("inputBookTitle").value;
-  const bookAuthor = document.getElementById("inputBookAuthor").value;
-  const yearRelease = document.getElementById("inputBookYear").value;
-  const selesaiDibaca = document.getElementById("inputBookIsComplete").checked;
+  const bookTitle = document.getElementById("inputBookTitle");
+  const bookAuthor = document.getElementById("inputBookAuthor");
+  const yearRelease = document.getElementById("inputBookYear");
+  const selesaiDibaca = document.getElementById("inputBookIsComplete");
 
   const bookObject = {
     id: +new Date(),
-    title: bookTitle,
-    author: bookAuthor,
-    year: yearRelease,
-    isComplete: selesaiDibaca,
+    title: bookTitle.value,
+    author: bookAuthor.value,
+    year: yearRelease.value,
+    isComplete: selesaiDibaca.checked,
   };
   tumpukanBuku.push(bookObject);
 
@@ -40,7 +40,7 @@ document.addEventListener(RENDER_EVENT, function() {
     const unreadBook = document.getElementById("incompleteBookshelfList");
     unreadBook.innerHTML = "";
 
-    for (const incompBook of incompleteBookshelfList) {
+    for (const incompBook of tumpukanBuku) {
         const bookElement = makeBookshelf(incompBook);
         unreadBook.append(bookElement);
     }
@@ -59,7 +59,7 @@ function makeBookshelf(bookObject) {
 
     const contArticle = document.createElement("article");
     contArticle.classList.add("book_item");
-    contArticle.append("textBookTitle", "textBookAuthor", "textYearRelease");
+    contArticle.append(textBookTitle, textBookAuthor, textYearRelease);
     contArticle.setAttribute("id", `book-${bookObject.id}`);
 /* 
     //BUTTON SECTION
