@@ -1,5 +1,7 @@
 const tumpukanBuku = [];
-const RENDER_EVENT = "render-bookshelf"
+const RENDER_EVENT = "render-bookshelf";
+const SAVED_EVENT = "saved-book";
+const STORAGE_KEY = "BOOKSHELF_APPS";
 
 function isStorageExist() /* boolean */ {
   if (typeof Storage === undefined) {
@@ -15,6 +17,15 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault();
     addBook();
   });
+
+  if (isStorageExist()) {
+    loadDataFromStorage();
+  }
+});
+
+document.addEventListener(SAVED_EVENT, function() {
+    console.log(localStorage.getItem(STORAGE_KEY));
+    alert("Data Berhasil Disimpan!")
 });
 
 function addBook() {
@@ -33,11 +44,11 @@ function addBook() {
   tumpukanBuku.push(bookObject);
 
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 //coba
 document.addEventListener(RENDER_EVENT, function() {
-    /* console.log(tumpukanBuku); */
     const unreadBook = document.getElementById("incompleteBookshelfList");
     unreadBook.innerHTML = "";
 
@@ -132,6 +143,7 @@ function addSelesaiBaca(bookId) {
 
     bookTarget.isComplete = true;
     document.dispatchEvent(new Event(RENDER_EVENT));
+    saveData();
 }
 
 function findBook(bookId) {
@@ -142,6 +154,59 @@ function findBook(bookId) {
     }
     return null;
 }
+
+function removeBacaBuku(bookId) {
+    const bookTarget = findBookIndex(bookId);
+
+    if (bookTarget === -1) return;
+
+    tumpukanBuku.splice(bookTarget, 1);
+    document.dispatchEvent(new Event(RENDER_EVENT));
+    saveData();
+}
+
+function undoBacaBuku(bookId) {
+    const bookTarget = findBook(bookId);
+
+    if (bookTarget == null) return;
+
+    bookTarget.isComplete = false;
+    document.dispatchEvent(new Event(RENDER_EVENT));
+    saveData();
+}
+
+function findBookIndex(bookId) {
+    for (const index in tumpukanBuku) {
+        if (tumpukanBuku[index].id === bookId) {
+            return index;
+        }
+    }
+
+    return -1;
+}
+
+function saveData() {
+    if (isStorageExist()) {
+        const parsed = JSON.stringify(tumpukanBuku);
+        localStorage.setItem(STORAGE_KEY, parsed);
+        document.dispatchEvent(new Event(SAVED_EVENT));
+    }
+}
+
+function loadDataFromStorage() {
+    const serializedData = localStorage.getItem(STORAGE_KEY);
+    let data = JSON.parse(serializedData);
+
+    if (data !== null) {
+        for (const book of data) {
+            tumpukanBuku.push(book);
+        }
+    }
+
+    document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+
 
 // (() => {
 //   let e = [];
