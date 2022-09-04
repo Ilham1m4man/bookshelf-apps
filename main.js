@@ -42,154 +42,153 @@ function addBook() {
   saveData();
 }
 
-document.addEventListener(RENDER_EVENT, function() {
-    const unreadBook = document.getElementById("incompleteBookshelfList");
-    unreadBook.innerHTML = "";
+document.addEventListener(RENDER_EVENT, function () {
+  const unreadBook = document.getElementById("incompleteBookshelfList");
+  unreadBook.innerHTML = "";
 
-    const sudahReadBook = document.getElementById("completeBookshelfList");
-    sudahReadBook.innerHTML = "";
+  const sudahReadBook = document.getElementById("completeBookshelfList");
+  sudahReadBook.innerHTML = "";
 
-    for (const incompBook of tumpukanBuku) {
-        const bookElement = makeBookshelf(incompBook);
-        if (!incompBook.isComplete) {
-            unreadBook.append(bookElement);
-        } else {
-            sudahReadBook.append(bookElement);
-        }
-        
+  for (const incompBook of tumpukanBuku) {
+    const bookElement = makeBookshelf(incompBook);
+    if (!incompBook.isComplete) {
+      unreadBook.append(bookElement);
+    } else {
+      sudahReadBook.append(bookElement);
     }
+  }
 });
 
 function makeBookshelf(bookObject) {
-    const textBookTitle = document.createElement("h3");
-    textBookTitle.innerText = bookObject.title;
+  const textBookTitle = document.createElement("h3");
+  textBookTitle.innerText = bookObject.title;
 
-    const textBookAuthor = document.createElement("p");
-    textBookAuthor.innerText = "Penulis: " + bookObject.author;
+  const textBookAuthor = document.createElement("p");
+  textBookAuthor.innerText = "Penulis: " + bookObject.author;
 
-    const textYearRelease = document.createElement("p");
-    textYearRelease.innerText = "Tahun: " + bookObject.year;
-    
-    const contArticle = document.createElement("article");
-    contArticle.classList.add("book_item");
-    contArticle.append(textBookTitle, textBookAuthor, textYearRelease);
-    contArticle.setAttribute("id", `book-${bookObject.id}`);
+  const textYearRelease = document.createElement("p");
+  textYearRelease.innerText = "Tahun: " + bookObject.year;
 
-    if (bookObject.isComplete) {
-      const btnBelumSelesaiDibaca = document.createElement("button");
-      btnBelumSelesaiDibaca.classList.add("green");
-      btnBelumSelesaiDibaca.innerText = "Belum selesai dibaca";
+  const contArticle = document.createElement("article");
+  contArticle.classList.add("book_item");
+  contArticle.append(textBookTitle, textBookAuthor, textYearRelease);
+  contArticle.setAttribute("id", `book-${bookObject.id}`);
 
-      btnBelumSelesaiDibaca.addEventListener("click", function () {
-        undoBacaBuku(bookObject.id);
-      });
+  if (bookObject.isComplete) {
+    const btnBelumSelesaiDibaca = document.createElement("button");
+    btnBelumSelesaiDibaca.classList.add("green");
+    btnBelumSelesaiDibaca.innerText = "Belum selesai dibaca";
 
-      const btnHapusBuku = document.createElement("button");
-      btnHapusBuku.classList.add("red");
-      btnHapusBuku.innerText = "Hapus buku";
+    btnBelumSelesaiDibaca.addEventListener("click", function () {
+      undoBacaBuku(bookObject.id);
+    });
 
-      btnHapusBuku.addEventListener("click", function () {
-        removeBacaBuku(bookObject.id);
-      });
+    const btnHapusBuku = document.createElement("button");
+    btnHapusBuku.classList.add("red");
+    btnHapusBuku.innerText = "Hapus buku";
 
-      const containerAction = document.createElement("div");
-      containerAction.classList.add("action");
-      containerAction.append(btnBelumSelesaiDibaca, btnHapusBuku);
+    btnHapusBuku.addEventListener("click", function () {
+      removeBacaBuku(bookObject.id);
+    });
 
-      contArticle.append(containerAction);
-    } else {
-      const btnSelesaiDibaca = document.createElement("button");
-      btnSelesaiDibaca.classList.add("green");
-      btnSelesaiDibaca.innerText = "Selesai dibaca";
+    const containerAction = document.createElement("div");
+    containerAction.classList.add("action");
+    containerAction.append(btnBelumSelesaiDibaca, btnHapusBuku);
 
-      btnSelesaiDibaca.addEventListener("click", function() {
-        addSelesaiBaca(bookObject.id);
-      });
+    contArticle.append(containerAction);
+  } else {
+    const btnSelesaiDibaca = document.createElement("button");
+    btnSelesaiDibaca.classList.add("green");
+    btnSelesaiDibaca.innerText = "Selesai dibaca";
 
-      const btnHapusBuku = document.createElement("button");
-      btnHapusBuku.classList.add("red");
-      btnHapusBuku.innerText = "Hapus buku";
+    btnSelesaiDibaca.addEventListener("click", function () {
+      addSelesaiBaca(bookObject.id);
+    });
 
-      btnHapusBuku.addEventListener("click", function () {
-        removeBacaBuku(bookObject.id);
-      });
+    const btnHapusBuku = document.createElement("button");
+    btnHapusBuku.classList.add("red");
+    btnHapusBuku.innerText = "Hapus buku";
 
-      const containerAction = document.createElement("div");
-      containerAction.classList.add("action");
-      containerAction.append(btnSelesaiDibaca, btnHapusBuku);
+    btnHapusBuku.addEventListener("click", function () {
+      removeBacaBuku(bookObject.id);
+    });
 
-      contArticle.append(containerAction);
-    }
+    const containerAction = document.createElement("div");
+    containerAction.classList.add("action");
+    containerAction.append(btnSelesaiDibaca, btnHapusBuku);
 
-    return contArticle;
+    contArticle.append(containerAction);
+  }
+
+  return contArticle;
 }
 
 function addSelesaiBaca(bookId) {
-    const bookTarget = findBook(bookId);
+  const bookTarget = findBook(bookId);
 
-    if (bookTarget == null) return;
+  if (bookTarget == null) return;
 
-    bookTarget.isComplete = true;
-    document.dispatchEvent(new Event(RENDER_EVENT));
-    saveData();
+  bookTarget.isComplete = true;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 function findBook(bookId) {
-    for (const bookItem of tumpukanBuku) {
-        if (bookItem.id === bookId) {
-            return bookItem;
-        }
+  for (const bookItem of tumpukanBuku) {
+    if (bookItem.id === bookId) {
+      return bookItem;
     }
-    return null;
+  }
+  return null;
 }
 
 function removeBacaBuku(bookId) {
-    const bookTarget = findBookIndex(bookId);
+  const bookTarget = findBookIndex(bookId);
 
-    if (bookTarget === -1) return;
+  if (bookTarget === -1) return;
 
-    tumpukanBuku.splice(bookTarget, 1);
-    document.dispatchEvent(new Event(RENDER_EVENT));
-    saveData();
+  tumpukanBuku.splice(bookTarget, 1);
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 function undoBacaBuku(bookId) {
-    const bookTarget = findBook(bookId);
+  const bookTarget = findBook(bookId);
 
-    if (bookTarget == null) return;
+  if (bookTarget == null) return;
 
-    bookTarget.isComplete = false;
-    document.dispatchEvent(new Event(RENDER_EVENT));
-    saveData();
+  bookTarget.isComplete = false;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 function findBookIndex(bookId) {
-    for (const index in tumpukanBuku) {
-        if (tumpukanBuku[index].id === bookId) {
-            return index;
-        }
+  for (const index in tumpukanBuku) {
+    if (tumpukanBuku[index].id === bookId) {
+      return index;
     }
+  }
 
-    return -1;
+  return -1;
 }
 
 function saveData() {
-    if (isStorageExist()) {
-        const parsed = JSON.stringify(tumpukanBuku);
-        localStorage.setItem(STORAGE_KEY, parsed);
-        document.dispatchEvent(new Event(SAVED_EVENT));
-    }
+  if (isStorageExist()) {
+    const parsed = JSON.stringify(tumpukanBuku);
+    localStorage.setItem(STORAGE_KEY, parsed);
+    document.dispatchEvent(new Event(SAVED_EVENT));
+  }
 }
 
 function loadDataFromStorage() {
-    const serializedData = localStorage.getItem(STORAGE_KEY);
-    let data = JSON.parse(serializedData);
+  const serializedData = localStorage.getItem(STORAGE_KEY);
+  let data = JSON.parse(serializedData);
 
-    if (data !== null) {
-        for (const book of data) {
-            tumpukanBuku.push(book);
-        }
+  if (data !== null) {
+    for (const book of data) {
+      tumpukanBuku.push(book);
     }
+  }
 
-    document.dispatchEvent(new Event(RENDER_EVENT));
+  document.dispatchEvent(new Event(RENDER_EVENT));
 }
