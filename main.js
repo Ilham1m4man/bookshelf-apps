@@ -23,25 +23,16 @@ function addBook() {
   const yearRelease = document.getElementById("inputBookYear").value;
   const selesaiDibaca = document.getElementById("inputBookIsComplete").checked;
 
-  const generatedID = generateId();
-  const bookObject = generateBookObject(generatedID, bookTitle, bookAuthor, yearRelease, selesaiDibaca);
+  const bookObject = {
+    id: +new Date(),
+    title: bookTitle,
+    author: bookAuthor,
+    year: yearRelease,
+    isComplete: selesaiDibaca,
+  };
   tumpukanBuku.push(bookObject);
 
   document.dispatchEvent(new Event(RENDER_EVENT));
-}
-
-function generateId() {
-    return +new Date;
-}
-
-function generateBookObject(id, title, author, year, isComplete) {
-    return {
-        id,
-        title,
-        author,
-        year,
-        isComplete
-    }
 }
 
 //coba
