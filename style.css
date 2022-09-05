@@ -169,3 +169,7 @@ main {
     background-color: darkred;
     color: white;
 }
+
+.is-hidden {
+    display: none;
+}

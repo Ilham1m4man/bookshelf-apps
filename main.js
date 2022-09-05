@@ -3,7 +3,7 @@ const RENDER_EVENT = "render-bookshelf";
 const SAVED_EVENT = "saved-book";
 const STORAGE_KEY = "BOOKSHELF_APPS";
 
-function isStorageExist() /* boolean */ {
+function isStorageExist() {
   if (typeof Storage === undefined) {
     alert("Browser kamu tidak mendukung local storage");
     return false;
@@ -20,7 +20,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (isStorageExist()) {
     loadDataFromStorage();
+    document.dispatchEvent(new Event(RENDER_EVENT));
   }
+
+  const submitSearch = document.getElementById("searchBook");
+  submitSearch.addEventListener("submit", function (event) {
+    event.preventDefault();
+    onSearch();
+  })
 });
 
 function addBook() {
@@ -189,6 +196,16 @@ function loadDataFromStorage() {
       tumpukanBuku.push(book);
     }
   }
+}
 
-  document.dispatchEvent(new Event(RENDER_EVENT));
+function onSearch() {
+  const searchTitle = document.getElementById("searchBookTitle").value.toLowerCase();
+  const dataBuku = document.querySelectorAll(".book_item > h3");
+  for (var i = 0; i < dataBuku.length; i++) {
+    if(dataBuku[i].innerText.toLowerCase().includes(searchTitle.toLowerCase())) {
+      dataBuku[i].parentElement.classList.remove("is-hidden");
+    } else {
+      dataBuku[i].parentElement.classList.add("is-hidden");
+    }
+  }
 }
